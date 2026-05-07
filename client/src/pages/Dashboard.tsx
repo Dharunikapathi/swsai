@@ -3,7 +3,7 @@ import { UploadZone } from '../components/UploadZone';
 import { FileProgressCard } from '../components/FileProgressCard';
 import { DocumentTable } from '../components/DocumentTable';
 import { ToastBanner } from '../components/ToastBanner';
-import { TableSkeleton, ProgressSkeleton } from '../components/LoadingSkeleton';
+import { TableSkeleton } from '../components/LoadingSkeleton';
 import api from '../api/client';
 import { useWebSocket } from '../hooks/useWebSocket';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Download, FileText, Calendar, HardDrive, ExternalLink } from 'lucide-react';
+import { Download, FileText, Upload } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -24,7 +24,7 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({ documents }) => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  const handleDownload = (id: string, name: string) => {
+  const handleDownload = (id: string) => {
     const url = `${import.meta.env.VITE_API_URL || 'http://localhost:4000/api'}/documents/${id}/download`;
     window.open(url, '_blank');
   };
@@ -89,7 +89,7 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({ documents }) => {
                   </td>
                   <td className="px-6 py-4 text-right">
                     <button 
-                      onClick={() => handleDownload(doc.id, doc.name)}
+                      onClick={() => handleDownload(doc.id)}
                       className="p-2 text-brand-blue hover:bg-brand-blue-light rounded-lg transition-colors inline-flex items-center gap-2"
                       title="Download"
                     >
@@ -106,5 +106,4 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({ documents }) => {
   );
 };
 
-// Need to import Upload for empty state
-import { Upload } from 'lucide-react';
+
