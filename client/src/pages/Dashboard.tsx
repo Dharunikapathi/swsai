@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { UploadZone } from '../components/UploadZone';
 import { FileProgressCard } from '../components/FileProgressCard';
+import { DocumentTable } from '../components/DocumentTable';
 import api from '../api/client';
 import { useWebSocket } from '../hooks/useWebSocket';
 
@@ -95,10 +96,7 @@ export const Dashboard: React.FC = () => {
           
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-text-primary">Recent Documents</h2>
-            {/* DocumentTable will go here */}
-            <div className="card text-center py-12 text-text-secondary">
-              <p>Document table coming soon...</p>
-            </div>
+            <DocumentTable documents={documents} />
           </div>
         </div>
 
