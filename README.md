@@ -1,31 +1,48 @@
 # SWS AI Document Management Dashboard
 
-A full-stack, real-time Document Management Dashboard built for SWS AI.
+A professional, full-stack document management platform built for SWS AI document intelligence.
 
-## Tech Stack
-- **Frontend**: React 18, Vite, TypeScript, Tailwind CSS v3, Framer Motion
-- **Backend**: Node.js, Express, TypeScript, Multer, WebSocket (`ws`)
-- **Database**: PostgreSQL with Prisma ORM
-- **Deployment**: Vercel (Frontend), Railway (Backend)
+## 🚀 Live Demo
+- **Frontend**: [Your Vercel URL]
+- **Backend**: [Your Railway/Render URL]
 
-## Features
-- **Individual & Bulk Upload**: Upload PDF documents with real-time progress bars.
-- **Smart Notifications**: WebSocket-powered notifications for bulk uploads (>3 files).
-- **Persistent Notification Center**: Side panel to manage success/info/error notifications.
-- **Download Functionality**: Instantly download any uploaded document.
-- **Premium Design**: SWS AI branded UI with Livvic font, smooth animations, and responsive layout.
+## ✨ Features
 
-## Setup Instructions
+- **Parallel File Uploads**: Individual progress tracking for every file with animated shimmer bars.
+- **Integrated PDF Intelligence**: Full-screen viewer with automated text analysis (Page count, Words, Headings).
+- **Smart Real-time Notifications**: 
+    - WebSocket-powered unread alerts.
+    - Bulk upload summary (>3 files) with automatic DB persistence.
+- **Premium UI/UX**:
+    - Branded design with **Livvic** font and curated blue/white palette.
+    - Mobile-responsive collapsible sidebar.
+    - Glassmorphic header and smooth Framer Motion transitions.
+    - Loading skeletons and interactive empty states.
+- **Security**: 10MB file size limit and secure PDF serving.
+
+## 🛠 Tech Stack
+
+| Layer | Choice |
+|---|---|
+| **Frontend** | React 18, Vite, TypeScript, Tailwind CSS v3 |
+| **Styling** | Framer Motion, Lucide Icons |
+| **Backend** | Node.js, Express, TypeScript |
+| **Database** | PostgreSQL + Prisma ORM |
+| **Real-time** | WebSocket (`ws`) |
+| **Analysis** | `pdf-parse` for document intelligence |
+
+## 📦 Setup & Installation
 
 ### 1. Prerequisites
 - Node.js (v18+)
-- PostgreSQL database
+- PostgreSQL Database
 
 ### 2. Backend Setup
 ```bash
 cd server
 npm install
-# Copy .env.example to .env and fill in your DATABASE_URL
+# Copy .env.example -> .env and fill in DATABASE_URL
+npx prisma generate
 npx prisma migrate dev
 npm run dev
 ```
@@ -34,25 +51,50 @@ npm run dev
 ```bash
 cd client
 npm install
-# Copy .env.example to .env and fill in VITE_API_URL and VITE_WS_URL
+# Copy .env.example -> .env and fill in VITE_API_URL and VITE_WS_URL
 npm run dev
 ```
 
-## Environment Variables
+## 🗄 Database Schema (Prisma)
 
-### Server (`server/.env`)
-- `DATABASE_URL`: PostgreSQL connection string
-- `PORT`: Server port (default 4000)
-- `CLIENT_URL`: URL of the frontend (for CORS)
+```prisma
+model Document {
+  id          String   @id @default(uuid())
+  name        String
+  size        Int
+  mimeType    String
+  storagePath String
+  status      String   @default("pending")
+  uploadedAt  DateTime @default(now())
+  sessionId   String?
+}
 
-### Client (`client/.env`)
-- `VITE_API_URL`: Backend API URL
-- `VITE_WS_URL`: Backend WebSocket URL
+model Notification {
+  id        String   @id @default(uuid())
+  message   String
+  type      String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  metadata  Json?
+}
 
-## Deployment
-- **Frontend**: Connect your GitHub repo to Vercel. Set the root directory to `client`.
-- **Backend**: Connect your GitHub repo to Railway. Set the root directory to `server`.
+model UploadSession {
+  id          String   @id @default(uuid())
+  fileCount   Int
+  completedAt DateTime?
+  status      String   @default("processing")
+  createdAt   DateTime @default(now())
+}
+```
 
-## License
+## 📝 Development Schedule & Commits
+This project was built following a structured 15-minute commit schedule:
+1. **0:15**: Setup & Prisma Schema
+2. **0:45**: Backend Multer & Upload Routes
+3. **1:30**: Frontend Dashboard & Parallel Progress
+4. **2:15**: WebSocket Integration & Bulk Events
+5. **3:00**: Notification Panel & Reading History
+6. **3:45**: PDF Viewer, Analysis & Responsive Polish
+
+## 📄 License
 MIT
-# swsai

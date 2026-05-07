@@ -1,13 +1,10 @@
 import React from 'react';
 import { useNotifications } from '../hooks/useNotifications';
-import { Bell, Trash2, Check, CheckCircle, AlertCircle, Info, ArrowLeft } from 'lucide-react';
+import { Bell, Trash2, Check, CheckCircle, AlertCircle, Info } from 'lucide-react';
 import { format } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
 
 export const NotificationsPage: React.FC = () => {
   const { notifications, markAsRead, deleteNotification, markAllAsRead } = useNotifications();
-  // Note: Using a simple state for navigation if react-router is not fully set up, 
-  // but I'll assume standard navigation for a prototype.
   
   const getIcon = (type: string) => {
     switch (type) {

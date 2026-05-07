@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import api from '../api/client';
-import { useWebSocket } from './useWebSocket';
+import { useWS } from '../context/WSContext';
 
 export interface Notification {
   id: string;
@@ -36,7 +36,7 @@ export function useNotifications() {
     }
   }, [fetchNotifications]);
 
-  useWebSocket(onMessage);
+  useWS(onMessage);
 
   const markAsRead = async (id: string) => {
     try {

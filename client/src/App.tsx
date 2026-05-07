@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Dashboard } from './pages/Dashboard';
 import { NotificationsPage } from './pages/Notifications';
 import { Sidebar } from './components/Sidebar';
 import { NotificationPanel } from './components/NotificationPanel';
 import { useNotifications } from './hooks/useNotifications';
-import { Bell, Search, ChevronRight } from 'lucide-react';
+import { Bell, Search, ChevronRight, Menu } from 'lucide-react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 
 function App() {
   const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
   const { 
     notifications, 
@@ -25,19 +26,38 @@ function App() {
   };
 
   return (
-    <div className="flex min-h-screen bg-surface-2 font-livvic">
-      <Sidebar activeTab={location.pathname === '/notifications' ? 'notifications' : 'dashboard'} />
+    <div className="flex min-h-screen bg-surface-2 font-livvic relative">
+      {/* Mobile Sidebar Backdrop */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[140] md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <Sidebar 
+        isOpen={isSidebarOpen} 
+        onClose={() => setIsSidebarOpen(false)}
+        activeTab={location.pathname === '/notifications' ? 'notifications' : 'dashboard'} 
+      />
 
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="bg-surface/80 backdrop-blur-md border-b border-slate-200 py-4 px-8 sticky top-0 z-50 flex justify-between items-center h-20">
+        <header className="bg-surface/80 backdrop-blur-md border-b border-slate-200 py-4 px-4 md:px-8 sticky top-0 z-50 flex justify-between items-center h-20">
           <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setIsSidebarOpen(true)}
+              className="md:hidden p-2 hover:bg-slate-100 rounded-lg text-text-secondary"
+            >
+              <Menu size={24} />
+            </button>
+
             <div className="flex items-center text-sm text-text-secondary gap-2">
-              <Link to="/" className="hover:text-brand-blue transition-colors">Home</Link>
-              <ChevronRight size={14} />
+              <Link to="/" className="hover:text-brand-blue transition-colors hidden sm:inline">Home</Link>
+              <ChevronRight size={14} className="hidden sm:inline" />
               <span className="text-brand-blue font-semibold">{getBreadcrumb()}</span>
             </div>
             
-            <div className="ml-8 relative hidden md:block">
+            <div className="ml-4 md:ml-8 relative hidden lg:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input 
                 type="text" 
@@ -47,11 +67,11 @@ function App() {
             </div>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 md:gap-6">
             <div className="relative">
               <button 
                 onClick={() => setIsNotifOpen(true)}
-                className="p-2.5 rounded-xl hover:bg-slate-100 transition-colors relative"
+                className="p-2 md:p-2.5 rounded-xl hover:bg-slate-100 transition-colors relative"
               >
                 <Bell className="text-text-secondary" size={24} />
                 {unreadCount > 0 && (
@@ -62,7 +82,7 @@ function App() {
               </button>
             </div>
             
-            <div className="h-10 w-px bg-slate-200" />
+            <div className="h-8 w-px bg-slate-200" />
             
             <div className="flex items-center gap-3">
               <div className="text-right hidden sm:block">
