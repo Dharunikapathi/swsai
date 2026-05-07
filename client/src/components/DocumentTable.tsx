@@ -45,6 +45,27 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({ documents }) => {
     setIsViewerOpen(true);
   };
 
+  if (documents.length === 0) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="card py-24 flex flex-col items-center justify-center text-center bg-slate-50/50 border-dashed border-2"
+      >
+        <div className="w-20 h-20 bg-brand-blue-light text-brand-blue rounded-full flex items-center justify-center mb-6 shadow-inner">
+          <Upload size={40} />
+        </div>
+        <h3 className="text-2xl font-bold text-text-primary">Your library is empty</h3>
+        <p className="text-text-secondary mt-2 max-w-xs mx-auto">
+          Upload your first PDF document to start using SWS AI document intelligence.
+        </p>
+        <div className="mt-8 flex items-center gap-2 text-brand-blue font-bold animate-bounce">
+          <Upload size={20} />
+          <span>Upload now →</span>
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <>
@@ -66,6 +87,13 @@ export const DocumentTable: React.FC<DocumentTableProps> = ({ documents }) => {
                 {documents.map((doc) => {
                   const status = statusConfig[doc.status] || statusConfig.complete;
                   return (
+                    <motion.tr
+                      key={doc.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 10 }}
+                      className="hover:bg-slate-50/50 even:bg-slate-50/30 transition-colors"
+                    >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="p-2 bg-brand-blue-light rounded-lg text-brand-blue">
