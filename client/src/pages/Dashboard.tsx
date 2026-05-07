@@ -3,6 +3,7 @@ import { UploadZone } from '../components/UploadZone';
 import { FileProgressCard } from '../components/FileProgressCard';
 import { DocumentTable } from '../components/DocumentTable';
 import { ToastBanner } from '../components/ToastBanner';
+import { TableSkeleton, ProgressSkeleton } from '../components/LoadingSkeleton';
 import api from '../api/client';
 import { useWebSocket } from '../hooks/useWebSocket';
 
@@ -16,6 +17,7 @@ interface UploadingFile {
 export const Dashboard: React.FC = () => {
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([]);
   const [documents, setDocuments] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [toast, setToast] = useState<{ message: string; type: 'info' | 'success'; visible: boolean }>({
     message: '',
     type: 'info',
@@ -28,6 +30,8 @@ export const Dashboard: React.FC = () => {
       setDocuments(response.data);
     } catch (error) {
       console.error('Failed to fetch documents:', error);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -129,7 +133,7 @@ export const Dashboard: React.FC = () => {
           
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-text-primary">Recent Documents</h2>
-            <DocumentTable documents={documents} />
+            {isLoading ? <TableSkeleton /> : <DocumentTable documents={documents} />}
           </div>
         </div>
 
