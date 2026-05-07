@@ -38,16 +38,26 @@ const upload = multer({
 router.post('/', upload.array('files'), async (req, res) => {
   try {
     const files = req.files as Express.Multer.File[];
-    const sessionId = req.body.sessionId || null;
-
     if (!files || files.length === 0) {
       return res.status(400).json({ error: 'No files uploaded' });
     }
 
+    const isBulk = files.length > 3;
+    let session = null;
+
+    if (isBulk) {
+      session = await prisma.uploadSession.create({
+        data: {
+          fileCount: files.length,
+          status: 'processing'
+        }
+      });
+    }
+
     const documents = [];
 
+    // Process files
     for (const file of files) {
-      // 1. Create record with "uploading" status (even if already written, per requirement)
       const doc = await prisma.document.create({
         data: {
           name: file.originalname,
@@ -55,11 +65,11 @@ router.post('/', upload.array('files'), async (req, res) => {
           mimeType: file.mimetype,
           storagePath: file.path,
           status: 'uploading',
-          sessionId: sessionId
+          sessionId: session?.id
         }
       });
 
-      // 2. Update to "complete" and broadcast
+      // Update to complete
       const updatedDoc = await prisma.document.update({
         where: { id: doc.id },
         data: { status: 'complete' }
@@ -74,6 +84,34 @@ router.post('/', upload.array('files'), async (req, res) => {
       });
 
       documents.push(updatedDoc);
+    }
+
+    if (isBulk && session) {
+      // Update session
+      await prisma.uploadSession.update({
+        where: { id: session.id },
+        data: { 
+          status: 'done',
+          completedAt: new Date()
+        }
+      });
+
+      // Create notification
+      const notification = await prisma.notification.create({
+        data: {
+          message: `${files.length} files uploaded successfully`,
+          type: 'success',
+          metadata: { sessionId: session.id, fileCount: files.length }
+        }
+      });
+
+      broadcast({
+        event: 'bulk_complete',
+        sessionId: session.id,
+        fileCount: files.length,
+        timestamp: new Date().toISOString(),
+        notificationId: notification.id
+      });
     }
 
     res.json(documents);
