@@ -66,11 +66,11 @@ function App() {
             
             <div className="flex items-center gap-3">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-bold text-text-primary leading-tight">Manish D.</p>
+                <p className="text-sm font-bold text-text-primary leading-tight">Dharunika T.</p>
                 <p className="text-[10px] text-text-secondary font-semibold uppercase tracking-wider">Administrator</p>
               </div>
               <div className="w-10 h-10 rounded-xl bg-brand-blue-light border border-brand-blue/20 flex items-center justify-center text-brand-blue font-bold shadow-sm">
-                MD
+                DT
               </div>
             </div>
           </div>
