@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { initWS } from './websocket/wsServer';
 import uploadRoutes from './routes/upload';
+import notificationRoutes from './routes/notifications';
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use('/uploads', express.static(path.join(__dirname, '..', uploadDir)));
 
 // Routes
 app.use('/api/documents', uploadRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Basic health check
 app.get('/api/health', (req, res) => {
