@@ -26,7 +26,7 @@ const uploadDir = process.env.UPLOAD_DIR || './uploads';
 app.use('/uploads', express.static(path.join(__dirname, '..', uploadDir)));
 
 // Routes
-app.use('/api/upload', uploadRoutes);
+app.use('/api/documents', uploadRoutes);
 
 // Basic health check
 app.get('/api/health', (req, res) => {
