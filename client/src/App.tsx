@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { Dashboard } from './pages/Dashboard';
+import { NotificationsPage } from './pages/Notifications';
 import { Sidebar } from './components/Sidebar';
 import { NotificationPanel } from './components/NotificationPanel';
 import { useNotifications } from './hooks/useNotifications';
 import { Bell, Search, ChevronRight } from 'lucide-react';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
 
 function App() {
   const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const location = useLocation();
   const { 
     notifications, 
     unreadCount, 
@@ -15,17 +18,23 @@ function App() {
     deleteNotification 
   } = useNotifications();
 
+  const getBreadcrumb = () => {
+    const path = location.pathname;
+    if (path === '/notifications') return 'Notifications';
+    return 'Dashboard';
+  };
+
   return (
     <div className="flex min-h-screen bg-surface-2 font-livvic">
-      <Sidebar activeTab="dashboard" />
+      <Sidebar activeTab={location.pathname === '/notifications' ? 'notifications' : 'dashboard'} />
 
       <div className="flex-1 flex flex-col min-w-0">
         <header className="bg-surface/80 backdrop-blur-md border-b border-slate-200 py-4 px-8 sticky top-0 z-50 flex justify-between items-center h-20">
           <div className="flex items-center gap-4">
             <div className="flex items-center text-sm text-text-secondary gap-2">
-              <span>Home</span>
+              <Link to="/" className="hover:text-brand-blue transition-colors">Home</Link>
               <ChevronRight size={14} />
-              <span className="text-brand-blue font-semibold">Dashboard</span>
+              <span className="text-brand-blue font-semibold">{getBreadcrumb()}</span>
             </div>
             
             <div className="ml-8 relative hidden md:block">
@@ -77,7 +86,10 @@ function App() {
         />
 
         <main className="flex-1 overflow-y-auto">
-          <Dashboard />
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
+          </Routes>
         </main>
       </div>
     </div>

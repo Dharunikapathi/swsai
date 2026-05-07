@@ -1,5 +1,6 @@
 import React from 'react';
 import { LayoutDashboard, Bell, Settings, FileText, BarChart2, Shield } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface SidebarProps {
   activeTab: string;
@@ -7,26 +8,27 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ activeTab }) => {
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
-    { id: 'documents', label: 'Documents', icon: <FileText size={20} /> },
-    { id: 'analytics', label: 'Analytics', icon: <BarChart2 size={20} /> },
-    { id: 'security', label: 'Security', icon: <Shield size={20} /> },
-    { id: 'settings', label: 'Settings', icon: <Settings size={20} /> },
+    { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/' },
+    { id: 'notifications', label: 'Notifications', icon: <Bell size={20} />, path: '/notifications' },
+    { id: 'documents', label: 'Documents', icon: <FileText size={20} />, path: '/' },
+    { id: 'analytics', label: 'Analytics', icon: <BarChart2 size={20} />, path: '/' },
+    { id: 'settings', label: 'Settings', icon: <Settings size={20} />, path: '/' },
   ];
 
   return (
     <div className="w-64 bg-surface border-r border-slate-200 flex flex-col h-screen sticky top-0">
       <div className="p-6 flex items-center gap-3">
-        <div className="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-brand-blue/20">
+        <Link to="/" className="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-brand-blue/20">
           S
-        </div>
+        </Link>
         <span className="text-2xl font-bold text-text-primary tracking-tight">SWS AI</span>
       </div>
 
       <nav className="flex-1 px-4 py-6 space-y-2">
         {menuItems.map((item) => (
-          <button
+          <Link
             key={item.id}
+            to={item.path}
             className={`
               w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative
               ${activeTab === item.id 
@@ -41,7 +43,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab }) => {
               {item.icon}
             </span>
             {item.label}
-          </button>
+          </Link>
         ))}
       </nav>
 
